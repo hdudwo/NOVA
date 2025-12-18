@@ -48,8 +48,8 @@ function Earth() {
 
       const m = landMask(nx, ny, nz)
       const isLand = m > 0.28
-      // bump를 아주 작게 해서 실루엣이 거의 완벽한 원이 되도록
-      const bump = isLand ? 0.08 * Math.max(0, m - 0.28) : 0
+      // bump를 조금 더 키워서 초록색 표면 두께(입체감)를 강화
+      const bump = isLand ? 0.16 * Math.max(0, m - 0.28) : 0
 
       v.setLength(baseRadius + bump)
       pos.setXYZ(i, v.x, v.y, v.z)
