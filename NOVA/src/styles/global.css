@@ -10,15 +10,12 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(circle at 20% 20%, #0f1629, #05060a 55%),
-    radial-gradient(circle at 80% 0%, #1a2240, transparent 35%);
-}
-
+html,
+body,
 #root {
-  min-height: 100vh;
+  margin: 0;
+  height: 100%;
+  background: #05060a;
 }
 
 .app-shell {
@@ -61,6 +58,10 @@ h1 {
   grid-template-columns: 1.5fr 1fr;
 }
 
+.app-grid.single {
+  grid-template-columns: 1fr;
+}
+
 .panel {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -78,10 +79,15 @@ h1 {
   margin-bottom: 12px;
 }
 
+/* fullscreen star view */
+.star-fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
 .canvas-view {
-  min-height: 420px;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
 }
 
 .canvas-placeholder {
@@ -116,4 +122,5 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
 
