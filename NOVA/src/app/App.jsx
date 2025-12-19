@@ -1,11 +1,7 @@
-import CanvasView from '../components/CanvasView.jsx'
+import LandingView from '../components/LandingView.jsx'
 
 function App() {
-  return (
-    <div className="star-fullscreen">
-      <CanvasView />
-    </div>
-  )
+  return <LandingView />
 }
 
 export default App
