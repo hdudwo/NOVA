@@ -121,13 +121,21 @@
   color: rgba(184, 194, 221, 0.8);
 }
 
+.landing-search-button .cursor-arrow {
+  transition: transform 0.3s ease;
+}
+
+.landing-search-button:hover .cursor-arrow {
+  transform: translateY(-2px);
+}
+
 .landing-search-button:hover {
   background: rgba(126, 168, 255, 0.15);
-  transform: translateY(-50%) scale(1.1);
+  transform: translateY(calc(-50% - 3px));
 }
 
 .landing-search-button:active {
-  transform: translateY(-50%) scale(0.95);
+  transform: translateY(calc(-50% - 1px));
 }
 
 @keyframes fadeInUp {

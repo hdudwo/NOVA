@@ -40,7 +40,33 @@ function LandingView() {
               autoFocus
             />
             <button type="submit" className="landing-search-button">
-              →
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="cursor-arrow"
+              >
+                {/* Vertical line (cursor body) */}
+                <line
+                  x1="10"
+                  y1="2"
+                  x2="10"
+                  y2="17"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                {/* Arrow pointing top-right (cursor arrowhead) */}
+                <path
+                  d="M10 2 L16 8 M10 2 L4 8 M16 8 L12 4"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </button>
           </div>
         </form>

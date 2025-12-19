@@ -11,10 +11,10 @@ const STAR_FIELD = {
   halfWidth: 70,
   halfHeight: 50,
   halfDepth: 65,
-  minSize: 0.006,
-  maxSize: 0.015,
-  color: "#e8f5ff",
-  emissive: "#a6cfff",
+  minSize: 0.012,
+  maxSize: 0.025,
+  color: "#ffffff",
+  emissive: "#ffffff",
 };
 
 /* =========================
@@ -189,8 +189,8 @@ function StarField() {
       <meshStandardMaterial
         color={STAR_FIELD.color}
         emissive={STAR_FIELD.emissive}
-        emissiveIntensity={0.7}
-        roughness={0.15}
+        emissiveIntensity={1.5}
+        roughness={0.1}
         metalness={0.05}
       />
     </instancedMesh>
@@ -208,10 +208,10 @@ export default function CanvasView() {
         gl={{ antialias: true }}
       >
         <color attach="background" args={["#05060a"]} />
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[10, 10, 6]} intensity={1.3} />
+        <ambientLight intensity={0.3} />
+        <directionalLight position={[10, 10, 6]} intensity={1.2} />
 
-        <SkyStars radius={120} depth={80} count={2600} factor={2.8} fade />
+        <SkyStars radius={120} depth={80} count={2600} factor={4.5} fade />
 
         <Earth />
         <StarField />
