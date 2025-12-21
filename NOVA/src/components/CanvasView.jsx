@@ -1,7 +1,8 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Stars as SkyStars } from "@react-three/drei";
+import { OrbitControls, Sky, Stars as SkyStars } from "@react-three/drei";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { deflate } from "three/examples/jsm/libs/fflate.module.js";
 
 const STAR_FIELD = {
   count: 60000,
@@ -164,6 +165,8 @@ function StarField() {
           STAR_FIELD.maxSize,
           Math.random()
         )
+
+        
       );
       temp.updateMatrix();
 
@@ -199,6 +202,7 @@ function StarField() {
   );
 }
 
+
 export default function CanvasView() {
   return (
     <Canvas camera={{ position: [0, 0, 26], fov: 55 }}>
@@ -208,8 +212,8 @@ export default function CanvasView() {
 
       <SkyStars radius={150} depth={90} count={3000} factor={4.5} fade />
       <StarField />
-
       <Earth />
+      
       <PlanetOrbit />
 
       <OrbitControls
