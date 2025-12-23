@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import CanvasView from './CanvasView.jsx'
-import '../styles/landing.css'
+import { useState } from "react";
+import CanvasView from "./CanvasView.jsx";
+import "../styles/landing.css";
 
 function LandingView() {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState("");
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (query.trim()) {
       // TODO: 검색 처리 로직
-      console.log('Search:', query)
+      console.log("Search:", query);
     }
-  }
+  };
 
   return (
     <div className="landing-container">
@@ -24,9 +24,7 @@ function LandingView() {
       <div className="landing-content">
         <div className="landing-header">
           <h1 className="landing-title">NOVA</h1>
-          <p className="landing-subtitle">
-            자신만의 우주를 만들어보세요
-          </p>
+          <p className="landing-subtitle">자신만의 우주를 만들어보세요</p>
         </div>
 
         <form className="landing-search-form" onSubmit={handleSubmit}>
@@ -72,8 +70,7 @@ function LandingView() {
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default LandingView
-
+export default LandingView;

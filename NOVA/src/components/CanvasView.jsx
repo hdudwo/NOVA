@@ -1,8 +1,10 @@
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Sky, Stars as SkyStars } from "@react-three/drei";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { OrbitControls, Stars as SkyStars } from "@react-three/drei";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { deflate } from "three/examples/jsm/libs/fflate.module.js";
+import { TextureLoader } from "three";
+
+import EarthSpecularMap from "/src/assets/image/8k_earth_specular_map.jpg";
 
 const STAR_FIELD = {
   count: 60000,
@@ -15,13 +17,11 @@ const STAR_FIELD = {
 
 function Earth() {
   const earthRef = useRef();
-  const baseGeoRef = useRef();
-  const landGeoRef = useRef();
+  const geoRef = useRef();
+  const specularMap = useLoader(TextureLoader, EarthSpecularMap);
 
-  const landMask = (x, y, z) =>
-    Math.sin(x * 2.1 + y * 0.5) * Math.cos(z * 1.8) +
-    Math.sin(y * 2.8 - x * 0.8) * Math.cos(z * 2.3) +
-    Math.cos(x * 1.5 + z * 1.2) * Math.sin(y * 1.9);
+  const BASE_RADIUS = 4;
+  const LAND_HEIGHT = 0.25; // ⭐ 육지 두께 (값 키우면 더 튀어나옴)
 
   useFrame((_, delta) => {
     if (earthRef.current) {
@@ -30,54 +30,62 @@ function Earth() {
   });
 
   useLayoutEffect(() => {
-    const geo = baseGeoRef.current;
-    if (!geo) return;
+    const geo = geoRef.current;
+    if (!geo || !specularMap.image) return;
+
+    const img = specularMap.image;
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    const data = ctx.getImageData(0, 0, img.width, img.height).data;
 
     const pos = geo.attributes.position;
     const colors = new Float32Array(pos.count * 3);
-    const sea = new THREE.Color("#46b4ff");
-    const land = new THREE.Color("#8ad26a");
     const v = new THREE.Vector3();
 
-    for (let i = 0; i < pos.count; i++) {
-      v.fromBufferAttribute(pos, i);
-      const n = v.clone().normalize();
-      const c = landMask(n.x, n.y, n.z) > 0.4 ? land : sea;
-      colors.set([c.r, c.g, c.b], i * 3);
-    }
-
-    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    geo.computeVertexNormals();
-  }, []);
-
-  useLayoutEffect(() => {
-    const geo = landGeoRef.current;
-    if (!geo) return;
-
-    const pos = geo.attributes.position;
-    const v = new THREE.Vector3();
+    const landColor = new THREE.Color("#6fcf97");
+    const seaColor = new THREE.Color("#4aa3ff");
 
     for (let i = 0; i < pos.count; i++) {
-      v.fromBufferAttribute(pos, i);
-      const n = v.clone().normalize();
-      const m = landMask(n.x, n.y, n.z);
-      v.setLength(m > 0.4 ? 4 + (m - 0.4) * 0.3 : 3.7);
+      v.fromBufferAttribute(pos, i).normalize();
+
+      const u = 0.5 + Math.atan2(v.z, v.x) / (2 * Math.PI);
+      const vv = 0.5 - Math.asin(v.y) / Math.PI;
+
+      const x = Math.floor(u * img.width);
+      const y = Math.floor(vv * img.height);
+      const idx = (y * img.width + x) * 4;
+
+      const brightness = data[idx];
+      const isOcean = brightness > 120;
+
+      // 🎯 색상
+      const c = isOcean ? seaColor : landColor;
+      colors[i * 3] = c.r;
+      colors[i * 3 + 1] = c.g;
+      colors[i * 3 + 2] = c.b;
+
+      // 🎯 두께 (육지만 튀어나오게)
+      const radius = isOcean ? BASE_RADIUS : BASE_RADIUS + LAND_HEIGHT;
+
+      v.multiplyScalar(radius);
       pos.setXYZ(i, v.x, v.y, v.z);
     }
 
+    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     pos.needsUpdate = true;
     geo.computeVertexNormals();
-  }, []);
+  }, [specularMap]);
 
   return (
     <group ref={earthRef} position={[0, 0, -8]}>
       <mesh>
-        <sphereGeometry ref={baseGeoRef} args={[4, 96, 96]} />
-        <meshStandardMaterial vertexColors roughness={0.6} />
-      </mesh>
-      <mesh>
-        <sphereGeometry ref={landGeoRef} args={[4, 96, 96]} />
-        <meshStandardMaterial color="#7fd46b" roughness={0.8} />
+        <sphereGeometry ref={geoRef} args={[BASE_RADIUS, 96, 96]} />
+        <meshStandardMaterial vertexColors roughness={0.85} metalness={0} />
       </mesh>
     </group>
   );
@@ -98,26 +106,21 @@ function Planet({ position, size, color, emissive }) {
 }
 
 function PlanetOrbit() {
-  const orbitRef = useRef();
+  const ref = useRef();
 
   useFrame((_, delta) => {
-    if (orbitRef.current) {
-      orbitRef.current.rotation.y += delta * 0.04;
+    if (ref.current) {
+      ref.current.rotation.y += delta * 0.04;
     }
   });
 
   return (
-    <group ref={orbitRef}>
+    <group ref={ref}>
       <Planet position={[-12, 5, -5]} size={1.5} color="#ff6b6b" />
       <Planet position={[10, -6, -3]} size={1.2} color="#4ecdc4" emissive />
       <Planet position={[-8, -8, -6]} size={2} color="#ffe66d" />
       <Planet position={[14, 3, -4]} size={0.8} color="#a8e6cf" />
       <Planet position={[6, 10, -7]} size={1.8} color="#ff9ff3" emissive />
-      <Planet position={[-15, -4, -5]} size={1.3} color="#95e1d3" />
-      <Planet position={[18, -2, -8]} size={2.3} color="#c7ceea" />
-      <Planet position={[-20, 6, -10]} size={1.1} color="#feca57" emissive />
-      <Planet position={[0, 16, -9]} size={1.6} color="#48dbfb" />
-      <Planet position={[22, 8, -12]} size={2.8} color="#5f27cd" emissive />
     </group>
   );
 }
@@ -129,7 +132,6 @@ function StarField() {
   const { positions, colors } = useMemo(() => {
     const pos = [];
     const col = [];
-
     const palette = [
       "#ffffff",
       "#9fd3ff",
@@ -149,14 +151,11 @@ function StarField() {
       );
       col.push(palette[Math.floor(Math.random() * palette.length)]);
     }
-
     return { positions: pos, colors: col };
   }, []);
 
   useLayoutEffect(() => {
     const temp = new THREE.Object3D();
-    const color = new THREE.Color();
-
     positions.forEach((p, i) => {
       temp.position.copy(p);
       temp.scale.setScalar(
@@ -165,14 +164,10 @@ function StarField() {
           STAR_FIELD.maxSize,
           Math.random()
         )
-
-        
       );
       temp.updateMatrix();
-
       meshRef.current.setMatrixAt(i, temp.matrix);
-      color.copy(colors[i]);
-      meshRef.current.setColorAt(i, color);
+      meshRef.current.setColorAt(i, colors[i]);
     });
 
     meshRef.current.instanceMatrix.needsUpdate = true;
@@ -193,15 +188,12 @@ function StarField() {
           vertexColors
           emissive="#ffffff"
           emissiveIntensity={2.5}
-          roughness={0.05}
-          metalness={0}
           toneMapped={false}
         />
       </instancedMesh>
     </group>
   );
 }
-
 
 export default function CanvasView() {
   return (
@@ -213,7 +205,6 @@ export default function CanvasView() {
       <SkyStars radius={150} depth={90} count={3000} factor={4.5} fade />
       <StarField />
       <Earth />
-      
       <PlanetOrbit />
 
       <OrbitControls
