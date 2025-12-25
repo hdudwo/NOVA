@@ -21,7 +21,7 @@ function Earth() {
   const specularMap = useLoader(TextureLoader, EarthSpecularMap);
 
   const BASE_RADIUS = 4;
-  const LAND_HEIGHT = 0.25; // ⭐ 육지 두께 (값 키우면 더 튀어나옴)
+  const LAND_HEIGHT = 0.15; // ⭐ 육지 두께 (값 키우면 더 튀어나옴)
 
   useFrame((_, delta) => {
     if (earthRef.current) {
@@ -205,6 +205,7 @@ export default function CanvasView() {
       <SkyStars radius={150} depth={90} count={3000} factor={4.5} fade />
       <StarField />
       <Earth />
+      
       <PlanetOrbit />
 
       <OrbitControls
