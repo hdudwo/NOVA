@@ -1,15 +1,18 @@
+// LandingView.jsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CanvasView from "./CanvasView.jsx";
 import "../styles/landing.css";
 
 function LandingView() {
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (query.trim()) {
-      // TODO: 검색 처리 로직
-      console.log("Search:", query);
+      // 로딩 페이지로 이동
+      navigate("/loading", { state: { query } });
     }
   };
 

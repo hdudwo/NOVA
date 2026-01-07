@@ -43,7 +43,15 @@
   font-size: 4rem;
   font-weight: 700;
   margin: 0 0 16px;
-  background: linear-gradient(135deg, #b794f6 0%, #9f7aea 20%, #a6cfff 40%, #f687b3 60%, #b794f6 80%, #9f7aea 100%);
+  background: linear-gradient(
+    135deg,
+    #b794f6 0%,
+    #9f7aea 20%,
+    #a6cfff 40%,
+    #f687b3 60%,
+    #b794f6 80%,
+    #9f7aea 100%
+  );
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -57,7 +65,14 @@
   margin: 0;
   font-weight: 400;
   letter-spacing: 0.08em;
-  background: linear-gradient(135deg, #b794f6 0%, #9f7aea 25%, #a6cfff 50%, #f687b3 75%, #b794f6 100%);
+  background: linear-gradient(
+    135deg,
+    #b794f6 0%,
+    #9f7aea 25%,
+    #a6cfff 50%,
+    #f687b3 75%,
+    #b794f6 100%
+  );
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -169,6 +184,4 @@
   .landing-subtitle {
     font-size: 1rem;
   }
-
 }
-

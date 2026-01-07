@@ -1,3 +1,4 @@
+// CanvasView.jsx
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls, Stars as SkyStars } from "@react-three/drei";
 import { useLayoutEffect, useMemo, useRef } from "react";
@@ -21,7 +22,7 @@ function Earth() {
   const specularMap = useLoader(TextureLoader, EarthSpecularMap);
 
   const BASE_RADIUS = 4;
-  const LAND_HEIGHT = 0.15; // ⭐ 육지 두께 (값 키우면 더 튀어나옴)
+  const LAND_HEIGHT = 0.15;
 
   useFrame((_, delta) => {
     if (earthRef.current) {
@@ -63,13 +64,11 @@ function Earth() {
       const brightness = data[idx];
       const isOcean = brightness > 120;
 
-      // 🎯 색상
       const c = isOcean ? seaColor : landColor;
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
       colors[i * 3 + 2] = c.b;
 
-      // 🎯 두께 (육지만 튀어나오게)
       const radius = isOcean ? BASE_RADIUS : BASE_RADIUS + LAND_HEIGHT;
 
       v.multiplyScalar(radius);
@@ -108,6 +107,23 @@ function Planet({ position, size, color, emissive }) {
 function PlanetOrbit() {
   const ref = useRef();
 
+  const planets = [
+    // 앞쪽 3개
+    { position: [-10, 6, 8], size: 1.5, color: "#ff6b6b" },
+    { position: [0, -8, 9], size: 1.8, color: "#4ecdc4", emissive: true },
+    { position: [12, 4, 7], size: 1.2, color: "#ffe66d" },
+
+    // 양옆 3개
+    { position: [-18, 0, 0], size: 1.6, color: "#a8e6cf" },
+    { position: [-15, 10, -2], size: 1.3, color: "#ff9ff3", emissive: true },
+    { position: [20, -5, 1], size: 1.4, color: "#ffd6a5" },
+
+    // 뒤쪽 3개
+    { position: [-8, -6, -10], size: 1.7, color: "#9bf6ff" },
+    { position: [10, 8, -9], size: 1.1, color: "#bdb2ff", emissive: true },
+    { position: [0, -10, -11], size: 1.5, color: "#caffbf" },
+  ];
+
   useFrame((_, delta) => {
     if (ref.current) {
       ref.current.rotation.y += delta * 0.04;
@@ -116,11 +132,9 @@ function PlanetOrbit() {
 
   return (
     <group ref={ref}>
-      <Planet position={[-12, 5, -5]} size={1.5} color="#ff6b6b" />
-      <Planet position={[10, -6, -3]} size={1.2} color="#4ecdc4" emissive />
-      <Planet position={[-8, -8, -6]} size={2} color="#ffe66d" />
-      <Planet position={[14, 3, -4]} size={0.8} color="#a8e6cf" />
-      <Planet position={[6, 10, -7]} size={1.8} color="#ff9ff3" emissive />
+      {planets.map((planet, i) => (
+        <Planet key={i} {...planet} />
+      ))}
     </group>
   );
 }
@@ -205,7 +219,7 @@ export default function CanvasView() {
       <SkyStars radius={150} depth={90} count={3000} factor={4.5} fade />
       <StarField />
       <Earth />
-      
+
       <PlanetOrbit />
 
       <OrbitControls
