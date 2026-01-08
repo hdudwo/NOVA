@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyC4SuCiMvr7iryv_K40R-dcFljHCCijQHI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>968263593222</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>Q
+	<key>BUNDLE_ID</key>
+	<string>nova</string>
+	<key>PROJECT_ID</key>
+	<string>nova-f12cb</string>
+	<key>STORAGE_BUCKET</key>
+	<string>nova-f12cb.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:968263593222:ios:ee59e73ca644c07c9e4287</string>
+</dict>
+</plist>
