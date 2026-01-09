@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 
 function LoadingView() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const query = location.state?.query || "";
   const [flash, setFlash] = useState(false);
 
   useEffect(() => {
@@ -12,21 +8,16 @@ function LoadingView() {
       setFlash(true);
     }, 3700);
 
-    const navTimer = setTimeout(() => {
-      navigate("/universe", { state: { query } });
-    }, 4000);
-
     return () => {
       clearTimeout(flashTimer);
-      clearTimeout(navTimer);
     };
-  }, [navigate, query]);
+  }, []);
 
-  // 색상 배열 (파란색, 보라색, 노란색)
+  // 색상 배열 (파란색, 보라색, 흰색)
   const colors = [
     { r: 147, g: 197, b: 253 }, // 파란색
     { r: 196, g: 181, b: 253 }, // 보라색
-    { r: 253, g: 224, b: 71 }, // 노란색
+    { r: 255, g: 255, b: 255 }, // 흰색
   ];
 
   return (
@@ -39,21 +30,16 @@ function LoadingView() {
         overflow: "hidden",
       }}
     >
-      {/* 워프 라인들 */}
+      {/* 워프 라인들 - 중앙에서 바깥으로 */}
       <div style={{ position: "absolute", inset: 0 }}>
-        {[...Array(120)].map((_, i) => {
-          const angle = (i / 120) * 360;
-          const delay = (i % 15) * 0.05;
-          const opacity = 0.5 + Math.random() * 0.4;
+        {[...Array(150)].map((_, i) => {
+          const angle = (i / 150) * 360;
+          const delay = (i % 20) * 0.03;
+          const opacity = 0.4 + Math.random() * 0.6;
+          const speed = 0.8 + Math.random() * 0.4; // 랜덤 속도
 
           // 랜덤 색상 선택
           const color = colors[Math.floor(Math.random() * colors.length)];
-
-          // 각도를 라디안으로 변환
-          const radian = (angle * Math.PI) / 180;
-          const startRadius = 800; // 시작 위치 (멀리)
-          const startX = Math.cos(radian) * startRadius;
-          const startY = Math.sin(radian) * startRadius;
 
           return (
             <div
@@ -62,17 +48,15 @@ function LoadingView() {
                 position: "absolute",
                 top: "50%",
                 left: "50%",
-                width: "3px",
-                height: "100px",
+                width: "2px",
+                height: "0px",
                 transformOrigin: "center top",
-                transform: `translate(-50%, -50%) rotate(${angle}deg)`,
+                transform: `translate(-50%, 0) rotate(${angle}deg)`,
                 background: `linear-gradient(to bottom, 
-                  rgba(255, 255, 255, 0.9), 
                   rgba(${color.r}, ${color.g}, ${color.b}, ${opacity}), 
+                  rgba(${color.r}, ${color.g}, ${color.b}, ${opacity * 0.5}), 
                   rgba(${color.r}, ${color.g}, ${color.b}, 0))`,
-                animation: `flyToCenter 1.5s ease-in ${delay}s infinite`,
-                "--start-x": `${startX}px`,
-                "--start-y": `${startY}px`,
+                animation: `warpOut ${speed}s linear ${delay}s infinite`,
               }}
             />
           );
@@ -86,13 +70,13 @@ function LoadingView() {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "50px",
-          height: "50px",
+          width: "30px",
+          height: "30px",
           background: "white",
           borderRadius: "50%",
-          animation: "pulseGrow 4s ease-in forwards",
+          animation: "pulseGlow 2s ease-in-out infinite",
           boxShadow:
-            "0 0 60px 25px rgba(255, 255, 255, 0.9), 0 0 120px 50px rgba(255, 255, 255, 0.5)",
+            "0 0 40px 15px rgba(255, 255, 255, 0.8), 0 0 80px 30px rgba(147, 197, 253, 0.5), 0 0 120px 50px rgba(196, 181, 253, 0.3)",
           zIndex: 5,
         }}
       />
@@ -111,34 +95,37 @@ function LoadingView() {
       )}
 
       <style>{`
-        @keyframes flyToCenter {
+        @keyframes warpOut {
           0% {
-            transform: translate(-50%, -50%) translate(var(--start-x), var(--start-y)) rotate(var(--angle)) scale(0.3);
-            height: 60px;
+            height: 0px;
             opacity: 0;
+            transform: translate(-50%, 0) rotate(var(--angle, 0deg)) translateY(0);
           }
-          20% {
+          10% {
             opacity: 1;
+            height: 50px;
           }
           100% {
-            transform: translate(-50%, -50%) translate(0, 0) rotate(var(--angle)) scale(2);
-            height: 300px;
+            height: 800px;
             opacity: 0;
+            transform: translate(-50%, 0) rotate(var(--angle, 0deg)) translateY(0);
           }
         }
 
-        @keyframes pulseGrow {
-          0% {
+        @keyframes pulseGlow {
+          0%, 100% {
             transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
+            box-shadow: 
+              0 0 40px 15px rgba(255, 255, 255, 0.8), 
+              0 0 80px 30px rgba(147, 197, 253, 0.5), 
+              0 0 120px 50px rgba(196, 181, 253, 0.3);
           }
           50% {
-            transform: translate(-50%, -50%) scale(1.5);
-            opacity: 1;
-          }
-          100% {
-            transform: translate(-50%, -50%) scale(6);
-            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.3);
+            box-shadow: 
+              0 0 60px 25px rgba(255, 255, 255, 1), 
+              0 0 120px 50px rgba(147, 197, 253, 0.7), 
+              0 0 180px 80px rgba(196, 181, 253, 0.5);
           }
         }
 
