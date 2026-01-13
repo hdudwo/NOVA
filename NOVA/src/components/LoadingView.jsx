@@ -288,6 +288,12 @@ function LoadingView() {
             opacity: 0;
           }
         }
+        
+
+
+
+
+        
 
         @keyframes strongFlash {
           0% {
