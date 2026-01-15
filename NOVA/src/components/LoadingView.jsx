@@ -288,10 +288,7 @@ function LoadingView() {
             opacity: 0;
           }
         }
-        
-
-
-
+      
 
         
 
