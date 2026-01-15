@@ -15,7 +15,9 @@ function LandingView() {
       navigate("/loading", { state: { query } });
     }
   };
+ 
 
+  
   return (
     <div className="landing-container">
       {/* 배경: 별과 지구 (블러 효과) */}
