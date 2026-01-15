@@ -236,6 +236,9 @@ function PlanetOrbit() {
     ref.current.rotation.y += delta * 0.05;
   });
 
+
+
+  
   return (
     <group ref={ref}>
       <PatternPlanet
