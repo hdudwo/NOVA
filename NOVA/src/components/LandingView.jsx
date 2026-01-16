@@ -15,6 +15,9 @@ function LandingView() {
       navigate("/loading", { state: { query } });
     }
   };
+
+
+  
  
 
   
